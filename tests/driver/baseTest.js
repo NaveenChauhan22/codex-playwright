@@ -3,6 +3,7 @@ const settings = require("../../settings.json");
 
 const HOME_SEARCH_INPUT_SELECTOR =
   'input#searchfor[name="searchtext"][data-test="search_input_trigger"]';
+const HOME_NAVIGATION_MAX_ATTEMPTS = 3;
 
 const test = base.test.extend({
   appSettings: async ({}, use) => {
@@ -30,6 +31,19 @@ const test = base.test.extend({
 });
 
 async function isHomePageLoaded(page) {
+  const currentUrl = page.url();
+  let pathIsHome = false;
+  try {
+    const pathname = new URL(currentUrl).pathname;
+    pathIsHome = pathname === "/" || pathname === "/nl/" || pathname === "/nl/nl/";
+  } catch {
+    pathIsHome = false;
+  }
+
+  if (!pathIsHome) {
+    return false;
+  }
+
   return page
     .locator(HOME_SEARCH_INPUT_SELECTOR)
     .first()
@@ -49,9 +63,15 @@ test.beforeEach(async ({ page, appSettings }) => {
     return;
   }
 
-  await page.waitForTimeout(appSettings.execution.delayBetweenTestsMs);
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-  await acceptCookiesIfPresent(page);
+  for (let attempt = 1; attempt <= HOME_NAVIGATION_MAX_ATTEMPTS; attempt += 1) {
+    await page.waitForTimeout(appSettings.execution.delayBetweenTestsMs);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await acceptCookiesIfPresent(page);
+
+    if (await isHomePageLoaded(page)) {
+      return;
+    }
+  }
 });
 
 test.afterEach(async ({ page }, testInfo) => {
