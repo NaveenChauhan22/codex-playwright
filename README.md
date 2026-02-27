@@ -45,3 +45,8 @@ npm run test:ui
 ```bash
 npm run report
 ```
+
+## Built With Codex
+
+This automation framework was built from scratch using OpenAI Codex.
+I will continue using Codex going forward to expand this project with additional test coverage and framework improvements.
