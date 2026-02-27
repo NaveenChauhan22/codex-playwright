@@ -1,0 +1,21 @@
+{
+  "app": {
+    "baseURL": "https://www.bol.com",
+    "loginPath": "/nl/account/login.html",
+    "searchPath": "/nl/nl/s/"
+  },
+  "credentials": {
+    "username": "invalid.user@example.com",
+    "password": "InvalidPassword123!"
+  },
+  "search": {
+    "query": "laptop"
+  },
+  "timeouts": {
+    "navigationMs": 30000,
+    "expectMs": 10000
+  },
+  "execution": {
+    "delayBetweenTestsMs": 5000
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+test-results/
+playwright-report/
+html-report/
+reports/*.xml
+reports/*.json
+*.log
