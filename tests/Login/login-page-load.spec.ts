@@ -1,7 +1,8 @@
-const { test, expect } = require("../driver/baseTest");
-const { LoginPage } = require("../../pageObjects/Login/LoginPage");
+import type { Page } from "@playwright/test";
+import { LoginPage } from "../../pageObjects/Login/LoginPage";
+import { expect, test } from "../driver/baseTest";
 
-async function skipIfBlocked(page, test) {
+async function skipIfBlocked(page: Page): Promise<void> {
   const blockedPageHeading = page.getByRole("heading", {
     name: /ip address .* is blocked|slow down there speed racer/i,
   });
@@ -15,7 +16,7 @@ test.describe("Login page", () => {
     const loginPage = new LoginPage(page);
 
     await loginPage.open(appSettings.app.loginPath);
-    await skipIfBlocked(page, test);
+    await skipIfBlocked(page);
     await expect(loginPage.usernameInput.first()).toBeVisible();
     await expect(loginPage.passwordInput.first()).toBeVisible();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

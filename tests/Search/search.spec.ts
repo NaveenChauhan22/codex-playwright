@@ -1,14 +1,18 @@
-const { test, expect } = require("../driver/baseTest");
-const { SearchPage } = require("../../pageObjects/Search/SearchPage");
+import type { Page } from "@playwright/test";
+import { SearchPage } from "../../pageObjects/Search/SearchPage";
+import { expect, test } from "../driver/baseTest";
 
-async function isBlockedPage(page) {
+async function isBlockedPage(page: Page): Promise<boolean> {
   const bodyText = await page.locator("body").innerText().catch(() => "");
   return /ip address.*(blocked|geblokkeerd)|temporarily blocked|tijdelijk geblokkeerd|slow down there speed racer/i.test(
     bodyText
   );
 }
 
-async function ensureSearchInputReady(page, test, appSettings) {
+async function ensureSearchInputReady(
+  page: Page,
+  appSettings: { execution: { delayBetweenTestsMs: number } }
+): Promise<SearchPage> {
   const searchPage = new SearchPage(page);
   const searchInput = searchPage.searchInput.first();
 
@@ -30,13 +34,13 @@ async function ensureSearchInputReady(page, test, appSettings) {
 
 test.describe("Search journey", () => {
   test("should load search controls on homepage", async ({ page, appSettings }) => {
-    const searchPage = await ensureSearchInputReady(page, test, appSettings);
+    const searchPage = await ensureSearchInputReady(page, appSettings);
 
     await expect(searchPage.searchInput.first()).toBeVisible();
   });
 
   test("should show results after entering a query", async ({ page, appSettings }) => {
-    const searchPage = await ensureSearchInputReady(page, test, appSettings);
+    const searchPage = await ensureSearchInputReady(page, appSettings);
     const query = appSettings.search.query;
 
     await searchPage.searchFor(query);

@@ -1,11 +1,18 @@
-const base = require("@playwright/test");
-const settings = require("../../settings.json");
+import { expect, test as base, type BrowserContext, type Page } from "@playwright/test";
+import settings from "../../settings.json";
 
 const HOME_SEARCH_INPUT_SELECTOR =
   'input#searchfor[name="searchtext"][data-test="search_input_trigger"]';
 const HOME_NAVIGATION_MAX_ATTEMPTS = 3;
 
-const test = base.test.extend({
+type AppSettings = typeof settings;
+type Fixtures = {
+  appSettings: AppSettings;
+  sharedContext: BrowserContext;
+  sharedPage: Page;
+};
+
+const test = base.extend<Fixtures>({
   appSettings: async ({}, use) => {
     await use(settings);
   },
@@ -30,7 +37,7 @@ const test = base.test.extend({
   },
 });
 
-async function isHomePageLoaded(page) {
+async function isHomePageLoaded(page: Page): Promise<boolean> {
   const currentUrl = page.url();
   let pathIsHome = false;
   try {
@@ -51,7 +58,7 @@ async function isHomePageLoaded(page) {
     .catch(() => false);
 }
 
-async function acceptCookiesIfPresent(page) {
+async function acceptCookiesIfPresent(page: Page): Promise<void> {
   const acceptButton = page.getByRole("button", { name: /accepteren|accept/i });
   if (await acceptButton.count()) {
     await acceptButton.first().click({ timeout: 3000 }).catch(() => {});
@@ -118,4 +125,4 @@ test.afterEach(async ({ page }, testInfo) => {
   }
 });
 
-module.exports = { test, expect: base.expect };
+export { test, expect };

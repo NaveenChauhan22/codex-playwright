@@ -1,7 +1,7 @@
-const { defineConfig, devices } = require("@playwright/test");
-const settings = require("./settings.json");
+import { defineConfig, devices } from "@playwright/test";
+import settings from "./settings.json";
 
-module.exports = defineConfig({
+export default defineConfig({
   testDir: "./tests",
   timeout: settings.timeouts.navigationMs,
   expect: {

@@ -15,13 +15,14 @@
 │   └── Search/            # Search test specs
 ├── test-results/          # Raw artifacts (screenshots/videos/traces)
 ├── html-report/           # Playwright HTML report
-├── playwright.config.js   # Main Playwright configuration
+├── playwright.config.ts   # Main Playwright configuration
+├── tsconfig.json          # TypeScript compiler options
 └── package.json
 ```
 
 ## Notes
 
-- Base navigation to `https://www.bol.com` is handled in `tests/driver/baseTest.js` via `beforeEach`, so tests do not call homepage navigation independently.
+- Base navigation to `https://www.bol.com` is handled in `tests/driver/baseTest.ts` via `beforeEach`, so tests do not call homepage navigation independently.
 - Credentials and paths are read from `settings.json`.
 - `bol.com` can rate-limit/temporarily block automation traffic by IP; tests skip in that case with a clear reason.
 
